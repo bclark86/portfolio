@@ -190,7 +190,7 @@ However, when we look at the distribution of the difference, we can see a fair a
     )
     + p9.geom_vline(xintercept=0, linetype='dashed')
     + p9.labs(
-      title='Average Revenue Per Visitor (ARPV) Difference Distribution',
+      title='Average Revenue Per Visitor (ARPV) Difference \n (Test - Control)',
       fill='',
       x='ARPV Difference',
       y='Trials'
@@ -206,7 +206,8 @@ avg_risk = np.median(boot_diff[boot_diff < 0])
 var_10 = np.percentile(boot_diff, q=10)
 
 summary_str = f"""
-We believe there is a {risk_prob:.0%} chance the test variant will reduce ARPV, with an average loss of ${avg_risk:.2f} in ARPV. 
+We believe there is a {risk_prob:.0%} chance the test variant will reduce ARPV,
+with an average loss of ${avg_risk:.2f} in ARPV. 
 
 We estimate a 10% chance that the loss will exceed ${var_10:.2f} per visitor.
 """
@@ -217,6 +218,8 @@ print(summary_str)
 
 ## Conclusion
 
-As a result of our analysis, we can have a much more nuanced conversation with business stakeholders about the uncertainty and risk of implementing an intervention that, on the surface, yielded directionally positive results and no statistically significant difference from our control experience. Perhaps this amount of risk is not tolerable for the business and we can move the discussion toward the ROI of reducing uncertainty by collecting more data via another experiment. This is not a conversation that would have taken place if we simply accepted the results of the significance test. 
+As a result of our analysis, we can have a much more nuanced conversation with business stakeholders about the uncertainty and risk of implementing an intervention that, on the surface, yielded directionally positive results and no statistically significant difference from our control experience. 
 
-While alternatives such as proper initial experiment design that accounted for acceptable risk tolerance or bayesian analysis methods could also be useful, this is an example of how bootstrapping can be a useful tool for extracting more information from experiment data. 
+Perhaps this amount of risk is not tolerable for the business and we can move the discussion toward the ROI of reducing uncertainty by collecting more data via another experiment. This is not a conversation that would have taken place if we simply accepted the results of the significance test. 
+
+While alternatives such as proper initial experiment design (e.g. MDE / sizing) that accounted for acceptable risk tolerance or bayesian analysis methods could also be useful, this is an example of how bootstrapping can be a helpful tool for extracting more information from experiment data. 

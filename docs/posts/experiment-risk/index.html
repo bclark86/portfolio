@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Bryan Clark">
-<meta name="dcterms.date" content="2023-01-30">
+<meta name="dcterms.date" content="2023-01-31">
 
 <title>Bryan Clark - Quantifying the Risk of Experimentation Results</title>
 <style>
@@ -205,6 +205,7 @@ div.csl-indent {
                                 <div class="quarto-categories">
                 <div class="quarto-category">code</div>
                 <div class="quarto-category">stats</div>
+                <div class="quarto-category">python</div>
               </div>
                   </div>
   </div>
@@ -222,7 +223,7 @@ div.csl-indent {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 30, 2023</p>
+        <p class="date">January 31, 2023</p>
       </div>
     </div>
     
@@ -243,7 +244,7 @@ div.csl-indent {
 <p>TL;DR: Using bootstrapping to quantify risk.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This post outlines an approach of using bootstrapping to quantify risk associated with the results of an A/B test. I’ve encountered this scenario during my career and found this approach to help reframe the conversation from <em>“was it significant?”</em> towards <em>“what is the risk?”</em></p>
+<p>This post outlines an approach of using bootstrapping to quantify risk associated with the results of an A/B test. I’ve encountered this scenario during my career and found this approach to help reframe the conversation from <em>“was it significant?”</em> to <em>“what is the risk?”</em></p>
 </section>
 <section id="problem-overview" class="level2">
 <h2 class="anchored" data-anchor-id="problem-overview">Problem Overview</h2>
@@ -338,7 +339,7 @@ P-value: 0.8930</code></pre>
 <section id="quantifying-uncertainty-and-risk" class="level5">
 <h5 class="anchored" data-anchor-id="quantifying-uncertainty-and-risk">Quantifying Uncertainty and Risk</h5>
 <p>However, just because the p-value is insignificant, it does not mean that there is no risk associated with the <code>test</code> variant.</p>
-<p>To help us better understand the uncertainty and risk, we can leverage nonparametric bootstrapping <span class="citation" data-cites="pennstatebootstrapping">(<a href="#ref-pennstatebootstrapping" role="doc-biblioref">Penn State 2018</a>)</span> to estimate the sampling distribution of the difference between the <code>test</code> and <code>control</code> variants. Using this distribution, we can then calculate our measures of uncertainty and risk.</p>
+<p>To help us better understand the uncertainty and risk, we can leverage nonparametric bootstrapping <span class="citation" data-cites="pennstatebootstrapping">(<a href="#ref-pennstatebootstrapping" role="doc-biblioref">Penn State 2018</a>)</span> to estimate the sampling distribution of the difference between the <code>test</code> and <code>control</code> variants. Using this distribution, we can then calculate our estimated measures of uncertainty and risk.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="boostrapping_visual.png" class="img-fluid figure-img"></p>
@@ -407,7 +408,7 @@ P-value: 0.8930</code></pre>
 <p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;ggplot: (8771783057120)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8772515810163)&gt;</code></pre>
 </div>
 </div>
 <p>However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line).</p>
@@ -425,7 +426,7 @@ P-value: 0.8930</code></pre>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_vline(xintercept<span class="op">=</span><span class="dv">0</span>, linetype<span class="op">=</span><span class="st">'dashed'</span>)</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      title<span class="op">=</span><span class="st">'Average Revenue Per Visitor (ARPV) Difference Distribution'</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      title<span class="op">=</span><span class="st">'Average Revenue Per Visitor (ARPV) Difference </span><span class="ch">\n</span><span class="st"> (Test - Control)'</span>,</span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      fill<span class="op">=</span><span class="st">''</span>,</span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      x<span class="op">=</span><span class="st">'ARPV Difference'</span>,</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      y<span class="op">=</span><span class="st">'Trials'</span></span>
@@ -435,7 +436,7 @@ P-value: 0.8930</code></pre>
 <p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>&lt;ggplot: (8771783756329)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8772515809842)&gt;</code></pre>
 </div>
 </div>
 <p>Lastly, to calculate uncertainty and risk, we’ll estimate the percentage of the distribution that is below 0 as well as the average loss associated with a suboptimal outcome.</p>
@@ -445,15 +446,17 @@ P-value: 0.8930</code></pre>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>var_10 <span class="op">=</span> np.percentile(boot_diff, q<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>summary_str <span class="op">=</span> <span class="ss">f"""</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ss">We believe there is a </span><span class="sc">{</span>risk_prob<span class="sc">:.0%}</span><span class="ss"> chance the test variant will reduce ARPV, with an average loss of $</span><span class="sc">{</span>avg_risk<span class="sc">:.2f}</span><span class="ss"> in ARPV. </span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ss">We estimate a 10% chance that the loss will exceed $</span><span class="sc">{</span>var_10<span class="sc">:.2f}</span><span class="ss"> per visitor.</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary_str)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ss">We believe there is a </span><span class="sc">{</span>risk_prob<span class="sc">:.0%}</span><span class="ss"> chance the test variant will reduce ARPV,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ss"> with an average loss of $</span><span class="sc">{</span>avg_risk<span class="sc">:.2f}</span><span class="ss"> in ARPV. </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">We estimate a 10% chance that the loss will exceed $</span><span class="sc">{</span>var_10<span class="sc">:.2f}</span><span class="ss"> per visitor.</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary_str)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-We believe there is a 44% chance the test variant will reduce ARPV, with an average loss of $-0.07 in ARPV. 
+We believe there is a 44% chance the test variant will reduce ARPV,
+ with an average loss of $-0.07 in ARPV. 
 
 We estimate a 10% chance that the loss will exceed $-0.13 per visitor.
 </code></pre>
@@ -461,8 +464,8 @@ We estimate a 10% chance that the loss will exceed $-0.13 per visitor.
 </div>
 </section>
 </section>
-<section id="outcome" class="level2">
-<h2 class="anchored" data-anchor-id="outcome">Outcome</h2>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>As a result of our analysis, we can have a much more nuanced conversation with business stakeholders about the uncertainty and risk of implementing an intervention that, on the surface, yielded directionally positive results and no statistically significant difference from our control experience. Perhaps this amount of risk is not tolerable for the business and we can move the discussion toward the ROI of reducing uncertainty by collecting more data via another experiment. This is not a conversation that would have taken place if we simply accepted the results of the significance test.</p>
 <p>While alternatives such as proper initial experiment design that accounted for acceptable risk tolerance or bayesian analysis methods could also be useful, this is an example of how bootstrapping can be a useful tool for extracting more information from experiment data.</p>
 

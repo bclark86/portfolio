@@ -3,6 +3,8 @@ title: "About"
 image: bryanclark.png
 about:
   template: trestles
+  image-shape: round
+  image-width: 12em
   links:
     - icon: linkedin
       text: LinkedIn
