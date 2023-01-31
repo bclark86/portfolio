@@ -20,15 +20,15 @@ This post outlines an approach of using bootstrapping to quantify risk associate
 
 ## Problem Overview
 
-##### Scenario
+#### Scenario
 
-Let's assume you work for a company that just ran an A/B test on a conversion funnel where each conversion from a visitor can have a different payoff. This could be an e-commerce website where each conversion is a variable purchase amount or subscription funnel that has different plan options. The goal of the test was either to not do any harm (or ideally improve revenue). The A/B test consisted of two arms: `control` and `test`. 
+Let's assume you work for a company that just ran an A/B test on a conversion funnel where each conversion from a visitor can have a different payoff. This could be an e-commerce website where each conversion is a variable purchase amount or subscription funnel that has different plan options. The goal of the test was to not do any harm to the revenue generated per visitor (or ideally improve revenue). The A/B test consisted of two arms: `control` and `test`. 
 
 The results of the experiment are directionally positive, but not statistically significant based on our predetermined p-value cutoff. Our experiment shows that there is no statistically significant difference between `control` and `test`, so we've accomplished our goal of doing no harm and can move forward, right? Not so fast. Just because the result was not statistically significant does NOT mean there is no risk with the `test` variation. 
 
 The goal of our analysis is to quantify the risk of implementation as it pertains to ARPV. 
 
-##### Defining Uncertainty and Risk
+#### Defining Uncertainty and Risk
 
 Uncertainty and risk can mean different things to different people, so we'll adopt the definitions used in _How to Measure Anything_ [@hubbard2014]:
 
@@ -37,13 +37,13 @@ Uncertainty and risk can mean different things to different people, so we'll ado
 - __Risk:__ A state of uncertainty where some of the possibilities involve a loss, catastrophe, or other undesirable outcome. 
 - __Measurement of Risk:__ A set of possibilities, each with quantified probabilities and quantified losses. For example: "We believe there is a 40% chance the proposed oil well will be dry with a loss of $12 million in exploratory drilling costs."
 
-##### Goal
+#### Goal
 
 Quantify the uncertainty and risk associated with the results of the "do no harm" A/B test.  
 
 ## Analytical Approach
 
-##### Data Generation
+#### Data Generation
 
 First, let's generate some fake test results to use for our example. The specific distributions don't matter as much for this, but we'll be sampling a set of purchases from a binomial distribution and purchase payoffs from a lognormal distribution. Combined, we get order values that consist of 0s and purchases with variable payoffs. 
 
@@ -90,7 +90,7 @@ print(
 )
 ```
 
-##### Significance Testing
+#### Significance Testing
 
 When we run a t-test on our experiment results, we see a directionally positive increase in ARPV and a p-value that suggests no detectable difference in ARPV between our `test` and `control` variants. 
 
@@ -103,7 +103,7 @@ print(f'ARPV Lift: {test.mean() / control.mean() - 1:.0%}')
 print(f'P-value: {pval:.4f}')
 ```
 
-##### Quantifying Uncertainty and Risk
+#### Quantifying Uncertainty and Risk
 
 However, just because the p-value is insignificant, it does not mean that there is no risk associated with the `test` variant. 
 
@@ -174,7 +174,7 @@ import plotnine as p9
 ```
 
 
-However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line).
+However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line). Had we calculated confidence interals with the significance test, we'd likely see something around -0.25 to 0.25. Already, we can start to see where there might be business risk in implementing the result of an experiment that showed no significant difference. 
 
 ```{python}
 (

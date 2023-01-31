@@ -248,14 +248,14 @@ div.csl-indent {
 </section>
 <section id="problem-overview" class="level2">
 <h2 class="anchored" data-anchor-id="problem-overview">Problem Overview</h2>
-<section id="scenario" class="level5">
-<h5 class="anchored" data-anchor-id="scenario">Scenario</h5>
-<p>Let’s assume you work for a company that just ran an A/B test on a conversion funnel where each conversion from a visitor can have a different payoff. This could be an e-commerce website where each conversion is a variable purchase amount or subscription funnel that has different plan options. The goal of the test was either to not do any harm (or ideally improve revenue). The A/B test consisted of two arms: <code>control</code> and <code>test</code>.</p>
+<section id="scenario" class="level4">
+<h4 class="anchored" data-anchor-id="scenario">Scenario</h4>
+<p>Let’s assume you work for a company that just ran an A/B test on a conversion funnel where each conversion from a visitor can have a different payoff. This could be an e-commerce website where each conversion is a variable purchase amount or subscription funnel that has different plan options. The goal of the test was to not do any harm to the revenue generated per visitor (or ideally improve revenue). The A/B test consisted of two arms: <code>control</code> and <code>test</code>.</p>
 <p>The results of the experiment are directionally positive, but not statistically significant based on our predetermined p-value cutoff. Our experiment shows that there is no statistically significant difference between <code>control</code> and <code>test</code>, so we’ve accomplished our goal of doing no harm and can move forward, right? Not so fast. Just because the result was not statistically significant does NOT mean there is no risk with the <code>test</code> variation.</p>
 <p>The goal of our analysis is to quantify the risk of implementation as it pertains to ARPV.</p>
 </section>
-<section id="defining-uncertainty-and-risk" class="level5">
-<h5 class="anchored" data-anchor-id="defining-uncertainty-and-risk">Defining Uncertainty and Risk</h5>
+<section id="defining-uncertainty-and-risk" class="level4">
+<h4 class="anchored" data-anchor-id="defining-uncertainty-and-risk">Defining Uncertainty and Risk</h4>
 <p>Uncertainty and risk can mean different things to different people, so we’ll adopt the definitions used in <em>How to Measure Anything</em> <span class="citation" data-cites="hubbard2014">(<a href="#ref-hubbard2014" role="doc-biblioref">Hubbard 2014</a>)</span>:</p>
 <ul>
 <li><strong>Uncertainty:</strong> The lack of complete certaintym that is, the existence of more than one possibility. The “true” outcome/state/result/value is not known.</li>
@@ -264,15 +264,15 @@ div.csl-indent {
 <li><strong>Measurement of Risk:</strong> A set of possibilities, each with quantified probabilities and quantified losses. For example: “We believe there is a 40% chance the proposed oil well will be dry with a loss of $12 million in exploratory drilling costs.”</li>
 </ul>
 </section>
-<section id="goal" class="level5">
-<h5 class="anchored" data-anchor-id="goal">Goal</h5>
+<section id="goal" class="level4">
+<h4 class="anchored" data-anchor-id="goal">Goal</h4>
 <p>Quantify the uncertainty and risk associated with the results of the “do no harm” A/B test.</p>
 </section>
 </section>
 <section id="analytical-approach" class="level2">
 <h2 class="anchored" data-anchor-id="analytical-approach">Analytical Approach</h2>
-<section id="data-generation" class="level5">
-<h5 class="anchored" data-anchor-id="data-generation">Data Generation</h5>
+<section id="data-generation" class="level4">
+<h4 class="anchored" data-anchor-id="data-generation">Data Generation</h4>
 <p>First, let’s generate some fake test results to use for our example. The specific distributions don’t matter as much for this, but we’ll be sampling a set of purchases from a binomial distribution and purchase payoffs from a lognormal distribution. Combined, we get order values that consist of 0s and purchases with variable payoffs.</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -320,8 +320,8 @@ div.csl-indent {
 </div>
 </div>
 </section>
-<section id="significance-testing" class="level5">
-<h5 class="anchored" data-anchor-id="significance-testing">Significance Testing</h5>
+<section id="significance-testing" class="level4">
+<h4 class="anchored" data-anchor-id="significance-testing">Significance Testing</h4>
 <p>When we run a t-test on our experiment results, we see a directionally positive increase in ARPV and a p-value that suggests no detectable difference in ARPV between our <code>test</code> and <code>control</code> variants.</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
@@ -336,8 +336,8 @@ P-value: 0.8930</code></pre>
 </div>
 </div>
 </section>
-<section id="quantifying-uncertainty-and-risk" class="level5">
-<h5 class="anchored" data-anchor-id="quantifying-uncertainty-and-risk">Quantifying Uncertainty and Risk</h5>
+<section id="quantifying-uncertainty-and-risk" class="level4">
+<h4 class="anchored" data-anchor-id="quantifying-uncertainty-and-risk">Quantifying Uncertainty and Risk</h4>
 <p>However, just because the p-value is insignificant, it does not mean that there is no risk associated with the <code>test</code> variant.</p>
 <p>To help us better understand the uncertainty and risk, we can leverage nonparametric bootstrapping <span class="citation" data-cites="pennstatebootstrapping">(<a href="#ref-pennstatebootstrapping" role="doc-biblioref">Penn State 2018</a>)</span> to estimate the sampling distribution of the difference between the <code>test</code> and <code>control</code> variants. Using this distribution, we can then calculate our estimated measures of uncertainty and risk.</p>
 <div class="quarto-figure quarto-figure-center">
@@ -408,10 +408,10 @@ P-value: 0.8930</code></pre>
 <p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;ggplot: (8760416494608)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8788359782316)&gt;</code></pre>
 </div>
 </div>
-<p>However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line).</p>
+<p>However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line). Had we calculated confidence interals with the significance test, we’d likely see something around -0.25 to 0.25. Already, we can start to see where there might be business risk in implementing the result of an experiment that showed no significant difference.</p>
 <div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(</span>
@@ -436,7 +436,7 @@ P-value: 0.8930</code></pre>
 <p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>&lt;ggplot: (8760436220535)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8788360964042)&gt;</code></pre>
 </div>
 </div>
 <p>Lastly, to calculate uncertainty and risk, we’ll estimate the percentage of the distribution that is below 0 as well as the average loss associated with a suboptimal outcome.</p>
