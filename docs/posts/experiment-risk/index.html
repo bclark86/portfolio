@@ -408,7 +408,7 @@ P-value: 0.8930</code></pre>
 <p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;ggplot: (8772515810163)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8760416494608)&gt;</code></pre>
 </div>
 </div>
 <p>However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line).</p>
@@ -436,7 +436,7 @@ P-value: 0.8930</code></pre>
 <p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>&lt;ggplot: (8772515809842)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8760436220535)&gt;</code></pre>
 </div>
 </div>
 <p>Lastly, to calculate uncertainty and risk, we’ll estimate the percentage of the distribution that is below 0 as well as the average loss associated with a suboptimal outcome.</p>
@@ -447,7 +447,7 @@ P-value: 0.8930</code></pre>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>summary_str <span class="op">=</span> <span class="ss">f"""</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ss">We believe there is a </span><span class="sc">{</span>risk_prob<span class="sc">:.0%}</span><span class="ss"> chance the test variant will reduce ARPV,</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ss"> with an average loss of $</span><span class="sc">{</span>avg_risk<span class="sc">:.2f}</span><span class="ss"> in ARPV. </span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ss">with an average loss of $</span><span class="sc">{</span>avg_risk<span class="sc">:.2f}</span><span class="ss"> in ARPV. </span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">We estimate a 10% chance that the loss will exceed $</span><span class="sc">{</span>var_10<span class="sc">:.2f}</span><span class="ss"> per visitor.</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
@@ -456,7 +456,7 @@ P-value: 0.8930</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 We believe there is a 44% chance the test variant will reduce ARPV,
- with an average loss of $-0.07 in ARPV. 
+with an average loss of $-0.07 in ARPV. 
 
 We estimate a 10% chance that the loss will exceed $-0.13 per visitor.
 </code></pre>
@@ -466,8 +466,9 @@ We estimate a 10% chance that the loss will exceed $-0.13 per visitor.
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>As a result of our analysis, we can have a much more nuanced conversation with business stakeholders about the uncertainty and risk of implementing an intervention that, on the surface, yielded directionally positive results and no statistically significant difference from our control experience. Perhaps this amount of risk is not tolerable for the business and we can move the discussion toward the ROI of reducing uncertainty by collecting more data via another experiment. This is not a conversation that would have taken place if we simply accepted the results of the significance test.</p>
-<p>While alternatives such as proper initial experiment design that accounted for acceptable risk tolerance or bayesian analysis methods could also be useful, this is an example of how bootstrapping can be a useful tool for extracting more information from experiment data.</p>
+<p>As a result of our analysis, we can have a much more nuanced conversation with business stakeholders about the uncertainty and risk of implementing an intervention that, on the surface, yielded directionally positive results and no statistically significant difference from our control experience.</p>
+<p>Perhaps this amount of risk is not tolerable for the business and we can move the discussion toward the ROI of reducing uncertainty by collecting more data via another experiment. This is not a conversation that would have taken place if we simply accepted the results of the significance test.</p>
+<p>While alternatives such as proper initial experiment design (e.g.&nbsp;MDE / sizing) that accounted for acceptable risk tolerance or bayesian analysis methods could also be useful, this is an example of how bootstrapping can be a helpful tool for extracting more information from experiment data.</p>
 
 
 
