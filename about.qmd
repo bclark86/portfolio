@@ -1,0 +1,42 @@
+---
+title: "About"
+image: bryanclark.png
+about:
+  template: trestles
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/bryan-clark-b38470b/
+    - icon: github
+      text: Github
+      href: https://github.com/bclark86
+
+---
+
+I have an insatiable curiosity and appetite for learning. I love solving problems that involve blending an understanding of people and process with quantitative data analysis. 
+
+#### BACKGROUND
+I'm experienced in generating value with data / data science (segmentation, analytics, modeling, experimentation, machine learning) for real estate, subscription / e-commerce, product development, monetization, acquisition, growth, and CRM teams within retail (Petco; H&M) and B2C SaaS companies (Dashlane; Noom).
+
+I have two master's degrees:
+
+1. MBA in Strategy / Tech Product Management from NYU Stern (2022)
+2. MS in Applied Business Analytics from Boston University (2018)
+
+#### STRENGTHS
+Pattern Recognition. Data-Driven Decision-Making. Synthesis. Resourcefulness. Adaptability. 
+
+__Top 5 [CliftonStrengths:](https://www.gallup.com/cliftonstrengths/en/home.aspx)__
+
+1. Futuristic: I am inspired by the future and what could be. I energize others with visions of the future. 
+
+2. Learner: great desire to learn and continuously improve. The process of learning, rather than the outcome, excites me. 
+
+3. Command: I have presence. I can take control of a situation and make decisions. 
+
+4. Restorative: I am adept at dealing with problems. I am good at figuring out what is wrong and resolving it. 
+
+5. Ideation: I am fascinated by ideas. I am able to find connections between seemingly disparate phenomena. 
+
+#### FOR FUN
+Reading. Learning. Health and wellness. Watching sports. Playing hockey. Learning to golf.

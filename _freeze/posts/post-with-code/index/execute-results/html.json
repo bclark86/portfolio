@@ -1,0 +1,11 @@
+{
+  "hash": "d53bda24845a5213940edf857ea3ba06",
+  "result": {
+    "markdown": "---\ntitle: Quantifying Uncertainty and Risk of Experimentation Results\nauthor: Bryan Clark\ndate: '2023-01-27'\ncategories:\n  - code\n  - stats\nimage: image.jpg\nformat:\n  html:\n    code-fold: true\n---\n\n- Intro\n- Problem Overview\n- Definitions\n- Code Examples\n\n::: {.cell execution_count=1}\n``` {.python .cell-code}\nimport numpy as np\nimport pandas as pd\nimport plotnine as p9\n\n# cvr\n# payoff\n# payoff distribution parameters\n\n# t-test\n# not significant\n\n# risk quantification\n# decision outcome\n\nx = 4\nprint (x)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n4\n```\n:::\n:::\n\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

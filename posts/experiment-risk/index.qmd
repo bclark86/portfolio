@@ -1,0 +1,222 @@
+---
+title: "Quantifying the Risk of Experimentation Results"
+author: "Bryan Clark"
+date: "2023-01-31"
+categories: [code, stats, python]
+image: "boostrapping_visual.png"
+bibliography: references.bib
+format:
+  html:
+    code-fold: false
+    highlight-style: atom-one
+jupyter: portfolio
+---
+
+TL;DR: Using bootstrapping to quantify risk. 
+
+## Introduction
+
+This post outlines an approach of using bootstrapping to quantify risk associated with the results of an A/B test. I've encountered this scenario during my career and found this approach to help reframe the conversation from _"was it significant?"_ to _"what is the risk?"_
+
+## Problem Overview
+
+##### Scenario
+
+Let's assume you work for a company that just ran an A/B test on a conversion funnel where each conversion from a visitor can have a different payoff. This could be an e-commerce website where each conversion is a variable purchase amount or subscription funnel that has different plan options. The goal of the test was either to not do any harm (or ideally improve revenue). The A/B test consisted of two arms: `control` and `test`. 
+
+The results of the experiment are directionally positive, but not statistically significant based on our predetermined p-value cutoff. Our experiment shows that there is no statistically significant difference between `control` and `test`, so we've accomplished our goal of doing no harm and can move forward, right? Not so fast. Just because the result was not statistically significant does NOT mean there is no risk with the `test` variation. 
+
+The goal of our analysis is to quantify the risk of implementation as it pertains to ARPV. 
+
+##### Defining Uncertainty and Risk
+
+Uncertainty and risk can mean different things to different people, so we'll adopt the definitions used in _How to Measure Anything_ [@hubbard2014]:
+
+- __Uncertainty:__ The lack of complete certaintym that is, the existence of more than one possibility. The "true" outcome/state/result/value is not known. 
+- __Measurement of Uncertainty:__ A set of probabilities assigned to a set of possibilities. For example: "There is a 60% chance this market will more than double in five years, a 30% chance this market will grow at a slower rate, and a 10% chance the market will shrink in the same period."
+- __Risk:__ A state of uncertainty where some of the possibilities involve a loss, catastrophe, or other undesirable outcome. 
+- __Measurement of Risk:__ A set of possibilities, each with quantified probabilities and quantified losses. For example: "We believe there is a 40% chance the proposed oil well will be dry with a loss of $12 million in exploratory drilling costs."
+
+##### Goal
+
+Quantify the uncertainty and risk associated with the results of the "do no harm" A/B test.  
+
+## Analytical Approach
+
+##### Data Generation
+
+First, let's generate some fake test results to use for our example. The specific distributions don't matter as much for this, but we'll be sampling a set of purchases from a binomial distribution and purchase payoffs from a lognormal distribution. Combined, we get order values that consist of 0s and purchases with variable payoffs. 
+
+```{python}
+import numpy as np
+from numpy.random import default_rng
+
+# random number generator
+rng = default_rng(934)
+
+# data generator
+def generate_data(n, p, mu, sigma):
+    # generate conversions from sample size n with probability p
+    conversions = rng.binomial(n, p)
+    # for each conversion, generate a payoff
+    payoffs = rng.lognormal(mu, sigma, conversions).round(2)
+    # generate a payoff of 0 for all non-conversions
+    non_conversions = np.zeros((n - payoffs.size))
+    # combine into a single array of results
+    results = np.concatenate([payoffs, non_conversions])
+    return results
+
+# control parameters
+control_params = {
+  'n': 15_000,
+  'p': 0.0375,
+  'mu': 3,
+  'sigma': 1
+}
+
+# test parameters
+test_params = {
+  'n': 15_000,
+  'p': 0.0365,
+  'mu': 3.1,
+  'sigma': 1
+}
+
+control = generate_data(**control_params)
+test = generate_data(**test_params)
+
+print(
+  f'Control ARPV: ${control.mean():.2f}; Test ARPV: ${test.mean():.2f}'
+)
+```
+
+##### Significance Testing
+
+When we run a t-test on our experiment results, we see a directionally positive increase in ARPV and a p-value that suggests no detectable difference in ARPV between our `test` and `control` variants. 
+
+```{python}
+from scipy.stats import ttest_ind
+
+stat, pval = ttest_ind(control, test, equal_var=False)
+
+print(f'ARPV Lift: {test.mean() / control.mean() - 1:.0%}')
+print(f'P-value: {pval:.4f}')
+```
+
+##### Quantifying Uncertainty and Risk
+
+However, just because the p-value is insignificant, it does not mean that there is no risk associated with the `test` variant. 
+
+To help us better understand the uncertainty and risk, we can leverage nonparametric bootstrapping [@pennstatebootstrapping] to estimate the sampling distribution of the difference between the `test` and `control` variants. Using this distribution, we can then calculate our estimated measures of uncertainty and risk.
+
+![Bootstrapping](boostrapping_visual.png)
+
+We'll get there in three steps:
+
+1. Generate bootstrap distribution for `test` and `control` variants
+2. Estimate the distribution for the difference of `test -  control`
+3. Calculate uncertainty and risk measurements
+
+```{python}
+import pandas as pd
+
+def bootstrap_distribution(arr, n_boots=10_000):
+    return np.array([
+        rng.choice(arr, size=arr.size, replace=True).mean()
+        for _ in range(n_boots)
+    ])
+
+# control bootstrap distribution
+boot_control = bootstrap_distribution(control)
+# test bootstrap distribution
+boot_test = bootstrap_distribution(test)
+# difference 
+boot_diff = boot_test - boot_control
+
+# combine for plotting
+boot_df = pd.concat([
+    pd.DataFrame(
+      boot_control, columns=['value']
+    ).assign(name='control'),
+    pd.DataFrame(
+      boot_test, columns=['value']
+    ).assign(name='test'),
+    pd.DataFrame(
+      boot_diff, columns=['value']
+    ).assign(name='difference')
+])
+
+boot_df['group'] = np.where(
+  boot_df['name'] != 'difference',
+  'variant', 'comparison'
+)
+```
+
+Looking at the distributions of each variant below, there is quite a bit of overlap, which mimics what we would expect given the small difference in lift and the high p-value in our significance testing. 
+
+```{python}
+import plotnine as p9
+(
+    p9.ggplot(
+      boot_df.query('group != "comparison"'),
+      p9.aes(x='value', fill='name'))
+    + p9.geom_histogram(
+      bins=50, alpha=0.5, position='identity'
+    )
+    + p9.scale_fill_manual(values=["#999999", "#009E73"])
+    + p9.labs(
+      title='Average Revenue Per Visitor (ARPV) Bootstrap Distributions',
+      fill='Variant',
+      x='ARPV',
+      y='Trials'
+    )
+)
+```
+
+
+However, when we look at the distribution of the difference, we can see a fair amount of the distribution sitting below 0 (referenced by the dotted line).
+
+```{python}
+(
+    p9.ggplot(
+      boot_df.query('group == "comparison"'),
+      p9.aes(x='value')
+    )
+    + p9.geom_histogram(
+      bins=50, 
+      alpha=0.5, 
+      position='identity',
+      fill='#0072B2'
+    )
+    + p9.geom_vline(xintercept=0, linetype='dashed')
+    + p9.labs(
+      title='Average Revenue Per Visitor (ARPV) Difference Distribution',
+      fill='',
+      x='ARPV Difference',
+      y='Trials'
+    )
+)
+```
+
+Lastly, to calculate uncertainty and risk, we'll estimate the percentage of the distribution that is below 0 as well as the average loss associated with a suboptimal outcome. 
+
+```{python}
+risk_prob = np.mean([boot_diff < 0])
+avg_risk = np.median(boot_diff[boot_diff < 0])
+var_10 = np.percentile(boot_diff, q=10)
+
+summary_str = f"""
+We believe there is a {risk_prob:.0%} chance the test variant will reduce ARPV, with an average loss of ${avg_risk:.2f} in ARPV. 
+
+We estimate a 10% chance that the loss will exceed ${var_10:.2f} per visitor.
+"""
+
+print(summary_str)
+```
+
+
+## Conclusion
+
+As a result of our analysis, we can have a much more nuanced conversation with business stakeholders about the uncertainty and risk of implementing an intervention that, on the surface, yielded directionally positive results and no statistically significant difference from our control experience. Perhaps this amount of risk is not tolerable for the business and we can move the discussion toward the ROI of reducing uncertainty by collecting more data via another experiment. This is not a conversation that would have taken place if we simply accepted the results of the significance test. 
+
+While alternatives such as proper initial experiment design that accounted for acceptable risk tolerance or bayesian analysis methods could also be useful, this is an example of how bootstrapping can be a useful tool for extracting more information from experiment data. 

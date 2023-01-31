@@ -1,0 +1,27 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Bryan Clark"
+  navbar:
+    left:
+      - text: Home
+        href: index.qmd
+      - text: Portfolio/Posts
+        href: posts.qmd
+      - text: Resume
+        href: resume.qmd
+    right:
+      - about.qmd
+      - icon: linkedin
+        href: https://www.linkedin.com/in/bryan-clark-b38470b/
+      - icon: github
+        href: https://github.com/bclark86
+format:
+  html:
+    theme: simplex
+    css: styles.css
+
+
+
